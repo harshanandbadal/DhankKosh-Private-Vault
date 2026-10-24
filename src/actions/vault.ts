@@ -5,27 +5,13 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 
-// Helper to get authenticated user or default demo user
+// Helper to get authenticated user strictly from session
 export async function getAuthenticatedUserId(): Promise<string> {
   const session = await auth();
-  if (session?.user?.id) {
-    return session.user.id;
+  if (!session?.user?.id) {
+    throw new Error("UNAUTHORIZED: Active session required to access private vault.");
   }
-  // Fallback to first user in database (e.g. Mr. Sharma or Harsh) if unauthenticated in dev
-  const firstUser = await prisma.user.findFirst();
-  if (firstUser) {
-    return firstUser.id;
-  }
-  // Auto-create default user
-  const newUser = await prisma.user.create({
-    data: {
-      email: "sharma@dhankosh.vault",
-      name: "Mr. Sharma",
-      salutation: "Mr.",
-      provider: "credentials",
-    },
-  });
-  return newUser.id;
+  return session.user.id;
 }
 
 // =========================================================================
@@ -543,15 +529,12 @@ export async function getVaultDataAction() {
     };
   });
 
+  if (!user) {
+    throw new Error("UNAUTHORIZED: Vault user account not found.");
+  }
+
   return {
-    user: user || {
-      id: userId,
-      name: "Mr. Sharma",
-      email: "sharma@dhankosh.vault",
-      salutation: "Mr.",
-      image: null,
-      hideAmounts: false,
-    },
+    user,
     summary: {
       netWorth,
       grossAssets,

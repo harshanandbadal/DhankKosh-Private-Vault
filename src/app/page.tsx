@@ -1,4 +1,6 @@
 import React from "react";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 import { getVaultDataAction } from "@/actions/vault";
 import Navbar from "@/components/Navbar";
 import NetWorthBanner from "@/components/NetWorthBanner";
@@ -9,9 +11,15 @@ import AssetBreakdownChart from "@/components/AssetBreakdownChart";
 import P2PLedgerWidget from "@/components/P2PLedgerWidget";
 import TransactionHistoryTable from "@/components/TransactionHistoryTable";
 import ModalContainer from "@/components/ModalContainer";
+
 export const dynamic = "force-dynamic";
 
 export default async function DashboardPage() {
+  const session = await auth();
+  if (!session?.user) {
+    redirect("/login");
+  }
+
   const vaultData = await getVaultDataAction();
 
   return (

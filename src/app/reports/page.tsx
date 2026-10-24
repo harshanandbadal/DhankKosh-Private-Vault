@@ -1,4 +1,6 @@
 import React from "react";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 import { getVaultDataAction } from "@/actions/vault";
 import Navbar from "@/components/Navbar";
 import ReportsView from "@/components/ReportsView";
@@ -6,8 +8,12 @@ import ModalContainer from "@/components/ModalContainer";
 
 export const dynamic = "force-dynamic";
 
-
 export default async function ReportsPage() {
+  const session = await auth();
+  if (!session?.user) {
+    redirect("/login");
+  }
+
   const vaultData = await getVaultDataAction();
 
   return (

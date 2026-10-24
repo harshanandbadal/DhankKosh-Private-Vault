@@ -18,20 +18,28 @@ import {
   ArrowLeftRight,
   ChevronDown,
   User as UserIcon,
+  LogOut,
+  Settings as SettingsIcon,
 } from "lucide-react";
+import { signOut } from "next-auth/react";
 
 export default function Navbar({ user }: { user?: any }) {
   const pathname = usePathname();
   const { isPrivate, togglePrivacy } = usePrivacy();
   const { openModal } = useModal();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const userMenuRef = useRef<HTMLDivElement>(null);
 
   // Close dropdown on click outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setDropdownOpen(false);
+      }
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+        setUserMenuOpen(false);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
@@ -44,7 +52,11 @@ export default function Navbar({ user }: { user?: any }) {
     { label: "P2P Ledger", href: "/p2p" },
   ];
 
-  const displayName = user?.name ? `${user.salutation ? user.salutation + " " : ""}${user.name}` : "Mr. Sharma";
+  const displayName = user?.name
+    ? (user.salutation && !user.name.toLowerCase().startsWith(user.salutation.toLowerCase()))
+      ? `${user.salutation} ${user.name}`
+      : user.name
+    : "Vault Master";
 
   return (
     <header className="sticky top-0 z-40 w-full vault-glass border-b border-white/10 px-4 lg:px-8 py-3">
@@ -98,16 +110,64 @@ export default function Navbar({ user }: { user?: any }) {
 
         {/* Action Controls */}
         <div className="flex items-center space-x-3">
-          {/* User Profile Pill */}
+          {/* User Profile Dropdown */}
+          <div className="relative" ref={userMenuRef}>
+            <button
+              onClick={() => setUserMenuOpen(!userMenuOpen)}
+              className="hidden sm:flex items-center space-x-2 px-3 py-1.5 rounded-full bg-slate-900/70 border border-white/10 hover:border-amber-400/40 text-xs font-medium text-slate-300 hover:text-white transition group"
+              title="Vault Master Profile & Options"
+            >
+              <div className="w-6 h-6 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-slate-950 font-bold text-[10px] shadow-sm">
+                {displayName.charAt(0)}
+              </div>
+              <span className="max-w-[120px] truncate">{displayName}</span>
+              <ChevronDown className="w-3 h-3 text-slate-400 group-hover:text-amber-400" />
+            </button>
+
+            {userMenuOpen && (
+              <div className="absolute right-0 mt-2 w-64 rounded-2xl vault-modal-glass border border-white/15 shadow-2xl p-2 z-50 animate-fadeIn text-slate-200">
+                <div className="px-3 py-2 border-b border-white/10 mb-1">
+                  <div className="text-[11px] text-amber-400 font-semibold uppercase tracking-wider">
+                    Logged In Vault Master
+                  </div>
+                  <div className="font-medium text-sm text-white truncate">{displayName}</div>
+                  {user?.email && (
+                    <div className="text-[11px] text-slate-400 font-mono truncate">{user.email}</div>
+                  )}
+                </div>
+
+                <button
+                  onClick={() => {
+                    setUserMenuOpen(false);
+                    openModal("SETTINGS");
+                  }}
+                  className="w-full flex items-center space-x-2.5 px-3 py-2 text-xs hover:bg-white/5 hover:text-amber-300 rounded-xl transition text-left"
+                >
+                  <SettingsIcon className="w-4 h-4 text-slate-400" />
+                  <span>Vault Settings & Danger Zone</span>
+                </button>
+
+                <div className="my-1 border-t border-white/10" />
+
+                <button
+                  onClick={() => signOut({ callbackUrl: "/login" })}
+                  className="w-full flex items-center space-x-2.5 px-3 py-2 text-xs hover:bg-rose-500/10 text-rose-300 hover:text-rose-200 rounded-xl transition text-left font-medium"
+                >
+                  <LogOut className="w-4 h-4 text-rose-400" />
+                  <span>Lock Vault & Sign Out</span>
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Quick Lock / Sign Out Button */}
           <button
-            onClick={() => openModal("SETTINGS")}
-            className="hidden sm:flex items-center space-x-2 px-3 py-1.5 rounded-full bg-slate-900/70 border border-white/10 hover:border-amber-400/40 text-xs font-medium text-slate-300 hover:text-white transition group"
-            title="Vault Master Settings & Danger Zone"
+            onClick={() => signOut({ callbackUrl: "/login" })}
+            className="flex items-center space-x-1.5 px-2.5 py-1.5 rounded-xl text-xs font-medium bg-slate-900/60 border border-white/10 hover:border-rose-500/40 text-slate-300 hover:text-rose-300 hover:bg-rose-500/10 transition group"
+            title="Lock Vault & Sign Out"
           >
-            <div className="w-6 h-6 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-slate-950 font-bold text-[10px] shadow-sm">
-              {displayName.charAt(0)}
-            </div>
-            <span className="max-w-[120px] truncate">{displayName}</span>
+            <LogOut className="w-3.5 h-3.5 text-slate-400 group-hover:text-rose-400" />
+            <span className="hidden xl:inline">Lock Vault</span>
           </button>
 
           {/* Hide / Reveal Privacy Toggle Button */}

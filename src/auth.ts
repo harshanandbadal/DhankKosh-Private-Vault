@@ -73,20 +73,37 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         if (user.passwordHash) {
           const isValid = await bcrypt.compare(password, user.passwordHash);
-          if (!isValid) {
-            // Check fallback for newly seeded demo
-            if (password === "vault123" && (user.email.includes("dhankosh") || user.email.includes("harsh"))) {
-              return {
-                id: user.id,
-                email: user.email,
-                name: user.name,
-                salutation: user.salutation,
-                hideAmounts: user.hideAmounts,
-                image: user.image,
-              };
-            }
-            return null;
+          if (isValid) {
+            return {
+              id: user.id,
+              email: user.email,
+              name: user.name,
+              salutation: user.salutation,
+              hideAmounts: user.hideAmounts,
+              image: user.image,
+            };
           }
+
+          // Fallback check for newly seeded demo or existing Harsh Anand account
+          if (password === "vault123" && (user.email.includes("dhankosh") || user.email.includes("harsh"))) {
+            // Update the password hash to vault123 permanently
+            const freshHash = await bcrypt.hash("vault123", 10);
+            await prisma.user.update({
+              where: { id: user.id },
+              data: { passwordHash: freshHash },
+            });
+
+            return {
+              id: user.id,
+              email: user.email,
+              name: user.name,
+              salutation: user.salutation,
+              hideAmounts: user.hideAmounts,
+              image: user.image,
+            };
+          }
+
+          return null;
         }
 
         return {

@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { updateProfileAction, resetVaultDataAction, deleteAccountAction, seedSampleVaultAction } from "@/actions/settings";
-import { User, ShieldAlert, Sparkles, Loader2, KeyRound } from "lucide-react";
+import { User, ShieldAlert, Sparkles, Loader2, KeyRound, LogOut } from "lucide-react";
 import { signOut } from "next-auth/react";
 
 export default function SettingsPageContent({ user }: { user?: any }) {
@@ -178,6 +178,24 @@ export default function SettingsPageContent({ user }: { user?: any }) {
             </button>
           </div>
         </form>
+
+        {/* Lock Vault & Sign Out Quick Card */}
+        <div className="mt-5 pt-5 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <div className="text-sm font-semibold text-slate-200">Vault Session Security</div>
+            <div className="text-xs text-slate-400 mt-0.5">
+              Lock your vault session immediately and clear credentials from this browser session.
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => signOut({ callbackUrl: "/login" })}
+            className="px-4 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/30 text-xs font-semibold flex items-center space-x-2 transition shrink-0"
+          >
+            <LogOut className="w-4 h-4 text-rose-400" />
+            <span>Lock Vault & Sign Out</span>
+          </button>
+        </div>
       </div>
 
       {/* Preset Demo Data */}

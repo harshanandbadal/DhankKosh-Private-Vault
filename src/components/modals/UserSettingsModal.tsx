@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useModal } from "@/context/ModalContext";
 import { updateProfileAction, resetVaultDataAction, deleteAccountAction, seedSampleVaultAction } from "@/actions/settings";
-import { X, User, ShieldAlert, Sparkles, AlertTriangle, Loader2 } from "lucide-react";
+import { X, User, ShieldAlert, Sparkles, AlertTriangle, Loader2, LogOut } from "lucide-react";
 import { signOut } from "next-auth/react";
 
 export default function UserSettingsModal({ user }: { user?: any }) {
@@ -188,6 +188,21 @@ export default function UserSettingsModal({ user }: { user?: any }) {
               Load Demo
             </button>
           </div>
+        </div>
+
+        {/* Lock Vault & Sign Out Button */}
+        <div className="mt-5 pt-4 border-t border-white/10">
+          <button
+            type="button"
+            onClick={() => {
+              closeModal();
+              signOut({ callbackUrl: "/login" });
+            }}
+            className="w-full py-2.5 px-4 rounded-xl bg-slate-900/80 hover:bg-rose-500/10 text-rose-300 hover:text-rose-200 border border-white/10 hover:border-rose-500/30 text-xs font-semibold flex items-center justify-center space-x-2 transition"
+          >
+            <LogOut className="w-4 h-4 text-rose-400" />
+            <span>Lock Vault & Sign Out</span>
+          </button>
         </div>
 
         {/* Danger Zone */}
