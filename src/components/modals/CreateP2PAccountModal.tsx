@@ -106,22 +106,20 @@ export default function CreateP2PAccountModal() {
               <button
                 type="button"
                 onClick={() => setInitialStatus("They Owe Me (To Receive)")}
-                className={`py-2 text-xs font-medium rounded-lg transition-all ${
-                  initialStatus === "They Owe Me (To Receive)"
+                className={`py-2 text-xs font-medium rounded-lg transition-all ${initialStatus === "They Owe Me (To Receive)"
                     ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm"
                     : "text-slate-400 hover:text-slate-200"
-                }`}
+                  }`}
               >
                 They Owe Me (To Receive)
               </button>
               <button
                 type="button"
                 onClick={() => setInitialStatus("I Owe Them (To Pay)")}
-                className={`py-2 text-xs font-medium rounded-lg transition-all ${
-                  initialStatus === "I Owe Them (To Pay)"
+                className={`py-2 text-xs font-medium rounded-lg transition-all ${initialStatus === "I Owe Them (To Pay)"
                     ? "bg-rose-500/20 text-rose-300 border border-rose-500/40 shadow-sm"
                     : "text-slate-400 hover:text-slate-200"
-                }`}
+                  }`}
               >
                 I Owe Them (To Pay)
               </button>

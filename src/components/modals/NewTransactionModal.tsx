@@ -22,8 +22,8 @@ export default function NewTransactionModal({
   const [amount, setAmount] = useState("");
   const [accountId, setAccountId] = useState(
     modalPayload?.accountId ||
-      (bankAccounts[0] ? `bank:${bankAccounts[0].id}` : "") ||
-      (physicalAssets[0] ? `cash:${physicalAssets[0].id}` : "")
+    (bankAccounts[0] ? `bank:${bankAccounts[0].id}` : "") ||
+    (physicalAssets[0] ? `cash:${physicalAssets[0].id}` : "")
   );
   const [category, setCategory] = useState("Salary");
   const [date, setDate] = useState(() => new Date().toISOString().split("T")[0]);
@@ -107,22 +107,20 @@ export default function NewTransactionModal({
               <button
                 type="button"
                 onClick={() => setType("Deposit")}
-                className={`py-2 text-xs font-medium rounded-lg transition-all ${
-                  type === "Deposit"
+                className={`py-2 text-xs font-medium rounded-lg transition-all ${type === "Deposit"
                     ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm"
                     : "text-slate-400 hover:text-slate-200"
-                }`}
+                  }`}
               >
                 Deposit
               </button>
               <button
                 type="button"
                 onClick={() => setType("Withdraw")}
-                className={`py-2 text-xs font-medium rounded-lg transition-all ${
-                  type === "Withdraw"
+                className={`py-2 text-xs font-medium rounded-lg transition-all ${type === "Withdraw"
                     ? "bg-rose-500/20 text-rose-300 border border-rose-500/40 shadow-sm"
                     : "text-slate-400 hover:text-slate-200"
-                }`}
+                  }`}
               >
                 Withdraw
               </button>

@@ -146,11 +146,10 @@ export default function CreateBankAccountModal() {
                   type="button"
                   key={type}
                   onClick={() => setAccountType(type)}
-                  className={`py-2 text-xs font-medium rounded-lg transition-all ${
-                    accountType === type
+                  className={`py-2 text-xs font-medium rounded-lg transition-all ${accountType === type
                       ? "bg-amber-400/20 text-amber-300 border border-amber-400/40 shadow-sm"
                       : "text-slate-400 hover:text-slate-200"
-                  }`}
+                    }`}
                 >
                   {type}
                 </button>

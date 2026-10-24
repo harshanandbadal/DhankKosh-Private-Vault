@@ -249,8 +249,8 @@ export async function createCreditCardAction(formData: {
 // =========================================================================
 export async function createPhysicalAssetAction(formData: {
   storageName: string;
-  holderName: string;
-  currentBalance: number;
+  holderName?: string;
+  currentBalance?: number;
   denominations?: Record<string, number> | string;
   locationDetails?: string;
   remarks?: string;
@@ -263,13 +263,15 @@ export async function createPhysicalAssetAction(formData: {
         ? JSON.stringify(formData.denominations)
         : formData.denominations || "";
 
+    const currentBalance = formData.currentBalance || 0;
+
     const result = await prisma.$transaction(async (tx) => {
       const asset = await tx.physicalAsset.create({
         data: {
           userId,
           storageName: formData.storageName,
           holderName: formData.holderName || "Vault Owner",
-          currentBalance: formData.currentBalance,
+          currentBalance,
           denominations: denomsStr,
           locationDetails: formData.locationDetails || "",
           remarks: formData.remarks || "",
@@ -277,12 +279,12 @@ export async function createPhysicalAssetAction(formData: {
         },
       });
 
-      if (formData.currentBalance > 0) {
+      if (currentBalance > 0) {
         await tx.transaction.create({
           data: {
             userId,
             type: "DEPOSIT",
-            amount: formData.currentBalance,
+            amount: currentBalance,
             category: "Opening Cash",
             description: `Initial count in ${formData.storageName}`,
             physicalAssetId: asset.id,

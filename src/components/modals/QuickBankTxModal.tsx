@@ -122,22 +122,20 @@ export default function QuickBankTxModal({ bankAccounts = [] }: { bankAccounts?:
             <button
               type="button"
               onClick={() => setMode("DEPOSIT")}
-              className={`py-2 text-xs font-medium rounded-lg transition-all ${
-                isDeposit
+              className={`py-2 text-xs font-medium rounded-lg transition-all ${isDeposit
                   ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm"
                   : "text-slate-400 hover:text-slate-200"
-              }`}
+                }`}
             >
               Deposit Funds
             </button>
             <button
               type="button"
               onClick={() => setMode("WITHDRAW")}
-              className={`py-2 text-xs font-medium rounded-lg transition-all ${
-                !isDeposit
+              className={`py-2 text-xs font-medium rounded-lg transition-all ${!isDeposit
                   ? "bg-rose-500/20 text-rose-300 border border-rose-500/40 shadow-sm"
                   : "text-slate-400 hover:text-slate-200"
-              }`}
+                }`}
             >
               Withdraw Funds
             </button>

@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useModal } from "@/context/ModalContext";
 import { createP2PLedgerTransactionAction } from "@/actions/transactions";
+import { formatINR } from "@/lib/formatters";
 import { X, Users, Loader2 } from "lucide-react";
 
 export default function P2PLedgerTransactionModal({
@@ -118,7 +119,7 @@ export default function P2PLedgerTransactionModal({
               ) : (
                 p2pContacts.map((c) => (
                   <option key={c.id} value={c.id}>
-                    {c.name} {c.phone ? `(${c.phone})` : ""} - Net: {c.netBalance >= 0 ? `+₹${c.netBalance}` : `-₹${Math.abs(c.netBalance)}`}
+                    {c.name} {c.phone ? `(${c.phone})` : ""} - Net: {c.netBalance >= 0 ? `+${formatINR(c.netBalance)}` : formatINR(c.netBalance)}
                   </option>
                 ))
               )}
@@ -131,22 +132,20 @@ export default function P2PLedgerTransactionModal({
               <button
                 type="button"
                 onClick={() => setMode("PAY")}
-                className={`py-2 text-xs font-medium rounded-lg transition-all ${
-                  mode === "PAY"
+                className={`py-2 text-xs font-medium rounded-lg transition-all ${mode === "PAY"
                     ? "bg-rose-500/20 text-rose-300 border border-rose-500/40 shadow-sm"
                     : "text-slate-400 hover:text-slate-200"
-                }`}
+                  }`}
               >
                 Pay (You Gave)
               </button>
               <button
                 type="button"
                 onClick={() => setMode("RECEIVE")}
-                className={`py-2 text-xs font-medium rounded-lg transition-all ${
-                  mode === "RECEIVE"
+                className={`py-2 text-xs font-medium rounded-lg transition-all ${mode === "RECEIVE"
                     ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm"
                     : "text-slate-400 hover:text-slate-200"
-                }`}
+                  }`}
               >
                 Receive (You Got)
               </button>
@@ -195,7 +194,7 @@ export default function P2PLedgerTransactionModal({
               >
                 {bankAccounts.map((b) => (
                   <option key={b.id} value={b.id}>
-                    {b.bankName} (•••• {b.last4Digits}) - Bal: ₹{b.balance}
+                    {b.bankName} (•••• {b.last4Digits}) - Bal: {formatINR(b.balance)}
                   </option>
                 ))}
               </select>
@@ -214,7 +213,7 @@ export default function P2PLedgerTransactionModal({
               >
                 {physicalAssets.map((c) => (
                   <option key={c.id} value={c.id}>
-                    {c.storageName} - Bal: ₹{c.currentBalance}
+                    {c.storageName} - Bal: {formatINR(c.currentBalance)}
                   </option>
                 ))}
               </select>

@@ -103,7 +103,8 @@ export default function CreateCreditCardModal({ existingCards = [] }: { existing
       return;
     }
 
-    const limitNum = parseFloat(creditLimit) || 0;
+    const cleanedLimit = creditLimit.replace(/,/g, "").replace(/\/-/g, "").trim();
+    const limitNum = parseFloat(cleanedLimit) || 0;
     if (limitNum <= 0 && !isSharedLimit) {
       setError("Please enter a valid credit limit");
       setLoading(false);
@@ -185,7 +186,7 @@ export default function CreateCreditCardModal({ existingCards = [] }: { existing
                 list="card-name-suggestions"
                 value={cardName}
                 onChange={(e) => setCardName(e.target.value)}
-                placeholder="eg. Amazon Pay, Flipkart..."
+                placeholder="e.g., Amazon Pay, Flipkart..."
                 className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/80 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-amber-400/50 transition text-sm"
                 required
               />
@@ -208,7 +209,7 @@ export default function CreateCreditCardModal({ existingCards = [] }: { existing
                 list="issuing-bank-suggestions"
                 value={issuingBank}
                 onChange={(e) => setIssuingBank(e.target.value)}
-                placeholder="eg. HDFC, SBI..."
+                placeholder="e.g., HDFC, SBI..."
                 className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/80 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-amber-400/50 transition text-sm"
               />
               <datalist id="issuing-bank-suggestions">
@@ -229,7 +230,7 @@ export default function CreateCreditCardModal({ existingCards = [] }: { existing
                 type="text"
                 value={holderName}
                 onChange={(e) => setHolderName(e.target.value)}
-                placeholder="eg. Mr. Harsh Anand"
+                placeholder="e.g., Mr. Harsh Anand"
                 className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/80 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-amber-400/50 transition text-sm"
                 required
               />
@@ -246,8 +247,8 @@ export default function CreateCreditCardModal({ existingCards = [] }: { existing
                   const cleaned = e.target.value.replace(/\D/g, "");
                   setLast4Digits(cleaned);
                 }}
-                placeholder="eg. 9696"
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950/80 border border-white/10 text-amber-400 font-mono placeholder-slate-600 focus:outline-none focus:border-amber-400/50 transition text-sm text-center tracking-widest"
+                placeholder="e.g., 0786"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950/80 border border-white/10 text-amber-400 font-mono placeholder-slate-600 focus:outline-none focus:border-amber-400/50 transition text-sm text-left tracking-widest"
                 required
               />
             </div>
@@ -259,35 +260,35 @@ export default function CreateCreditCardModal({ existingCards = [] }: { existing
               Credit Limit (₹)
             </label>
             <input
-              type="number"
-              min="0"
-              step="any"
+              type="text"
+              inputMode="numeric"
               value={creditLimit}
-              onChange={(e) => setCreditLimit(e.target.value)}
-              placeholder="eg. 1,00,000"
+              onChange={(e) => {
+                const val = e.target.value.replace(/[^0-9,]/g, "");
+                setCreditLimit(val);
+              }}
+              placeholder="e.g., 1,00,000/-"
               className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/80 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-amber-400/50 transition text-sm font-mono"
               required={!isSharedLimit}
             />
           </div>
 
-          {/* Link this card to an existing card's limit (on/off) */}
+          {/* Link this card to an existing card's limit */}
           <div className="p-3.5 rounded-xl bg-slate-950/50 border border-white/10 space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-xs font-medium text-slate-200">
-                Link this card to an existing card's limit (on/off)
+                Link this card to an existing card's limit
               </span>
               <button
                 type="button"
                 onClick={() => setIsSharedLimit(!isSharedLimit)}
-                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                  isSharedLimit ? "bg-amber-500" : "bg-slate-700"
-                }`}
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${isSharedLimit ? "bg-amber-500" : "bg-slate-700"
+                  }`}
                 title={isSharedLimit ? "Link Limit: ON" : "Link Limit: OFF"}
               >
                 <span
-                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                    isSharedLimit ? "translate-x-6" : "translate-x-1"
-                  }`}
+                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${isSharedLimit ? "translate-x-6" : "translate-x-1"
+                    }`}
                 />
               </button>
             </div>
@@ -350,11 +351,10 @@ export default function CreateCreditCardModal({ existingCards = [] }: { existing
                     type="button"
                     key={t.id}
                     onClick={() => setTheme(t.id)}
-                    className={`w-7 h-7 rounded-full border-2 transition-all ${t.class} ${
-                      theme === t.id
+                    className={`w-7 h-7 rounded-full border-2 transition-all ${t.class} ${theme === t.id
                         ? "scale-110 ring-2 ring-amber-400 ring-offset-2 ring-offset-slate-900"
                         : "opacity-60 hover:opacity-100"
-                    }`}
+                      }`}
                     title={t.label}
                   />
                 ))}
@@ -377,7 +377,7 @@ export default function CreateCreditCardModal({ existingCards = [] }: { existing
               className="btn-gold px-6 py-2.5 text-sm rounded-xl flex items-center space-x-2"
             >
               {loading && <Loader2 className="w-4 h-4 animate-spin" />}
-              <span>Create Card</span>
+              <span>Create Credit Card</span>
             </button>
           </div>
         </form>

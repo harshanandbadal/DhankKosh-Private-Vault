@@ -59,7 +59,7 @@ export default function TransactionHistoryTable({
       header,
       ...filtered.map(
         (t) =>
-          `${formatDate(t.date)} (${t.type}) | ${t.id} | ${t.category} | ${t.description || "—"} | ${getAccountName(t)} | ₹${t.amount}`
+          `${formatDate(t.date)} (${t.type}) | ${t.id} | ${t.category} | ${t.description || "—"} | ${getAccountName(t)} | ${formatINR(t.amount)}`
       ),
     ].join("\n");
     navigator.clipboard.writeText(text);
@@ -68,7 +68,7 @@ export default function TransactionHistoryTable({
   };
 
   const handleCopyTx = (tx: any) => {
-    const text = `${formatDate(tx.date)} (${tx.type}) | ${tx.id} | ${tx.category} | ${tx.description || "—"} | ${getAccountName(tx)} | ₹${tx.amount}`;
+    const text = `${formatDate(tx.date)} (${tx.type}) | ${tx.id} | ${tx.category} | ${tx.description || "—"} | ${getAccountName(tx)} | ${formatINR(tx.amount)}`;
     navigator.clipboard.writeText(text);
     setCopiedTxId(tx.id);
     setTimeout(() => setCopiedTxId(null), 2000);
@@ -222,11 +222,10 @@ export default function TransactionHistoryTable({
                     <td className="py-3 px-4">
                       <div className="flex items-center space-x-2">
                         <div
-                          className={`w-6 h-6 rounded-lg flex items-center justify-center shrink-0 ${
-                            isDebit
+                          className={`w-6 h-6 rounded-lg flex items-center justify-center shrink-0 ${isDebit
                               ? "bg-rose-500/10 text-rose-400"
                               : "bg-emerald-500/10 text-emerald-400"
-                          }`}
+                            }`}
                         >
                           {isDebit ? (
                             <ArrowUpRight className="w-3.5 h-3.5" />

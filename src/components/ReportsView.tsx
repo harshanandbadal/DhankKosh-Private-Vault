@@ -109,8 +109,8 @@ export default function ReportsView({ initialTransactions = [] }: { initialTrans
 
     const footer = [
       divider,
-      `TOTAL DEBITS:  RS ${totals.totalDebits.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
-      `TOTAL CREDITS: RS ${totals.totalCredits.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+      `TOTAL DEBITS:  ${formatINR(totals.totalDebits)}`,
+      `TOTAL CREDITS: ${formatINR(totals.totalCredits)}`,
     ];
 
     return [...header, ...lines, ...footer].join("\n");

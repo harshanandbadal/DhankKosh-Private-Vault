@@ -1,26 +1,18 @@
 export function formatINR(amount: number | null | undefined, hidePrivacy: boolean = false): string {
   if (hidePrivacy) {
-    return "₹ ••••••";
+    return "₹ ••••••.••";
   }
-  const val = amount ?? 0;
-  return new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency: "INR",
-    maximumFractionDigits: 0,
-  }).format(val);
-}
-
-export function formatINRWithDecimals(amount: number | null | undefined, hidePrivacy: boolean = false): string {
-  if (hidePrivacy) {
-    return "₹ ••••••";
-  }
-  const val = amount ?? 0;
+  const val = typeof amount === "number" && !isNaN(amount) ? amount : 0;
   return new Intl.NumberFormat("en-IN", {
     style: "currency",
     currency: "INR",
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(val);
+}
+
+export function formatINRWithDecimals(amount: number | null | undefined, hidePrivacy: boolean = false): string {
+  return formatINR(amount, hidePrivacy);
 }
 
 export function maskAccountNumber(accNumber?: string | null, last4?: string | null, hidePrivacy: boolean = false): string {
