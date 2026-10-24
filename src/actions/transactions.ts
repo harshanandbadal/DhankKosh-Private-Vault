@@ -431,3 +431,86 @@ export async function getFilteredTransactionsAction(filters: {
     return { success: false, error: error.message || "Failed to load reports" };
   }
 }
+
+// =========================================================================
+// 4. DELETE TRANSACTION
+// =========================================================================
+export async function deleteTransactionAction(transactionId: string) {
+  try {
+    const userId = await getAuthenticatedUserId();
+
+    const txRecord = await prisma.transaction.findFirst({
+      where: { id: transactionId, userId },
+    });
+
+    if (!txRecord) {
+      return { success: false, error: "Transaction not found" };
+    }
+
+    await prisma.$transaction(async (tx) => {
+      // Revert account balances where appropriate
+      if (txRecord.bankAccountId) {
+        if (txRecord.type === "DEPOSIT") {
+          await tx.bankAccount.update({
+            where: { id: txRecord.bankAccountId },
+            data: { balance: { decrement: txRecord.amount } },
+          });
+        } else if (txRecord.type === "WITHDRAW") {
+          await tx.bankAccount.update({
+            where: { id: txRecord.bankAccountId },
+            data: { balance: { increment: txRecord.amount } },
+          });
+        }
+      } else if (txRecord.physicalAssetId) {
+        if (txRecord.type === "DEPOSIT") {
+          await tx.physicalAsset.update({
+            where: { id: txRecord.physicalAssetId },
+            data: { currentBalance: { decrement: txRecord.amount } },
+          });
+        } else if (txRecord.type === "WITHDRAW") {
+          await tx.physicalAsset.update({
+            where: { id: txRecord.physicalAssetId },
+            data: { currentBalance: { increment: txRecord.amount } },
+          });
+        }
+      } else if (txRecord.creditCardId) {
+        if (txRecord.type === "CARD_SPEND") {
+          await tx.creditCard.update({
+            where: { id: txRecord.creditCardId },
+            data: {
+              totalOutstanding: { decrement: txRecord.amount },
+              availableBalance: { increment: txRecord.amount },
+            },
+          });
+        } else if (txRecord.type === "CARD_BILL_PAY") {
+          await tx.creditCard.update({
+            where: { id: txRecord.creditCardId },
+            data: {
+              totalOutstanding: { increment: txRecord.amount },
+              availableBalance: { decrement: txRecord.amount },
+            },
+          });
+        }
+      } else if (txRecord.giftCardId) {
+        if (txRecord.type === "DEPOSIT") {
+          await tx.giftCard.update({
+            where: { id: txRecord.giftCardId },
+            data: { balance: { decrement: txRecord.amount } },
+          });
+        }
+      }
+
+      await tx.transaction.delete({
+        where: { id: transactionId },
+      });
+    });
+
+    revalidatePath("/");
+    revalidatePath("/reports");
+    return { success: true };
+  } catch (error: any) {
+    console.error("Error deleting transaction:", error);
+    return { success: false, error: error.message || "Failed to delete transaction" };
+  }
+}
+

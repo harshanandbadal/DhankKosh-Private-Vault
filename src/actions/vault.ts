@@ -383,20 +383,38 @@ export async function createGiftCardAction(formData: {
     const last4 = formData.last4Digits || formData.cardNumber.slice(-4);
     const exp = formData.expiryDate ? new Date(formData.expiryDate) : null;
 
-    const result = await prisma.giftCard.create({
-      data: {
-        userId,
-        brandName: formData.brandName,
-        ownerName: formData.ownerName || "Vault Owner",
-        cardNumber: formData.cardNumber,
-        last4Digits: last4,
-        initialBalance: formData.initialBalance,
-        balance: formData.initialBalance,
-        expiryDate: exp,
-        linkedAccountId: formData.linkedAccountId || "",
-        purchaseMethod: formData.purchaseMethod || "Credit Card",
-        remarks: formData.remarks || "",
-      },
+    const result = await prisma.$transaction(async (tx) => {
+      const card = await tx.giftCard.create({
+        data: {
+          userId,
+          brandName: formData.brandName,
+          ownerName: formData.ownerName || "Vault Owner",
+          cardNumber: formData.cardNumber,
+          last4Digits: last4,
+          initialBalance: formData.initialBalance,
+          balance: formData.initialBalance,
+          expiryDate: exp,
+          linkedAccountId: formData.linkedAccountId || "",
+          purchaseMethod: formData.purchaseMethod || "Credit Card",
+          remarks: formData.remarks || "",
+        },
+      });
+
+      if (formData.initialBalance > 0) {
+        await tx.transaction.create({
+          data: {
+            userId,
+            type: "DEPOSIT",
+            amount: formData.initialBalance,
+            category: "Gift Card",
+            description: formData.remarks || `Initial balance for ${formData.brandName} Gift Card`,
+            giftCardId: card.id,
+            date: new Date(),
+          },
+        });
+      }
+
+      return card;
     });
 
     revalidatePath("/");

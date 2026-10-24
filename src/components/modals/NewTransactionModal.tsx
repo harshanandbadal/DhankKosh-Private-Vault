@@ -208,7 +208,7 @@ export default function NewTransactionModal({
           {/* Description / Remarks */}
           <div>
             <label className="block text-xs font-medium text-slate-300 mb-1.5">
-              Description / Remarks
+              Remark
             </label>
             <input
               type="text"

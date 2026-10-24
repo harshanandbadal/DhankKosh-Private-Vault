@@ -1,0 +1,17 @@
+{
+    "sqltools.connections": [
+        {
+            "pgOptions": {
+                "ssl": {
+                    "rejectUnauthorized": true
+                }
+            },
+            "ssh": "Disabled",
+            "previewLimit": 50,
+            "server": "localhost",
+            "driver": "PostgreSQL",
+            "connectString": "postgresql://neondb_owner:npg_KqnDWwEfVk25@ep-rough-mode-azpy6t4x-pooler.c-3.ap-southeast-1.aws.neon.tech/dhankosh-private-vault?sslmode=require&channel_binding=require",
+            "name": "Dhankosh Private Vault"
+        }
+    ]
+}
