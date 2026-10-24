@@ -38,6 +38,7 @@ export default function CreditCardsSection({
 
   return (
     <div className="space-y-3">
+      {/* Section Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <CardIcon className="w-4 h-4 text-amber-400" />
@@ -66,7 +67,7 @@ export default function CreditCardsSection({
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-2 gap-4">
           {creditCards.map((card) => {
             const limit = card.creditLimit || 1;
             const outstanding = card.totalOutstanding || 0;
@@ -76,78 +77,93 @@ export default function CreditCardsSection({
             return (
               <div
                 key={card.id}
-                className={`relative rounded-2xl p-4.5 bg-gradient-to-br ${getThemeGradient(
+                style={{ aspectRatio: "3.37 / 2.15" }}
+                className={`relative rounded-2xl p-4 sm:p-5 bg-gradient-to-br ${getThemeGradient(
                   card.theme
-                )} border shadow-xl flex flex-col justify-between overflow-hidden group hover:scale-[1.01] transition-all`}
+                )} border shadow-2xl flex flex-col justify-between overflow-hidden group hover:scale-[1.01] transition-all duration-300`}
               >
-                {/* Skeuomorphic EMV Chip & Network / Linked Status */}
-                <div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
-                      {/* EMV Chip Graphic */}
-                      <div className="w-7 h-5 rounded-md bg-gradient-to-tr from-amber-400 via-yellow-200 to-amber-500 p-0.5 shadow-sm border border-yellow-600/50 flex flex-col justify-around">
-                        <div className="h-0.5 w-full bg-amber-700/40" />
-                        <div className="h-0.5 w-full bg-amber-700/40" />
-                      </div>
-                      <Wifi className="w-3.5 h-3.5 text-slate-400 rotate-90" />
-                    </div>
+                {/* Glossy card sheen overlay & ambient shine */}
+                <div className="absolute inset-0 bg-gradient-to-tr from-white/[0.04] via-transparent to-white/[0.08] pointer-events-none" />
 
-                    <div className="flex items-center space-x-1.5">
-                      {card.isSharedLimit && (
-                        <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[9px] font-semibold flex items-center space-x-1">
-                          <LinkIcon className="w-2.5 h-2.5" />
-                          <span>linked</span>
-                        </span>
-                      )}
-
-                      {/* Mastercard style dual circles */}
-                      <div className="flex -space-x-1.5">
-                        <div className="w-4 h-4 rounded-full bg-rose-500/80 shadow-sm" />
-                        <div className="w-4 h-4 rounded-full bg-amber-500/80 shadow-sm" />
-                      </div>
+                {/* Top Row: EMV Chip & Network / Linked Status */}
+                <div className="relative z-10 flex items-center justify-between">
+                  <div className="flex items-center space-x-2.5">
+                    {/* Realistic Gold EMV Chip */}
+                    <div className="w-8 h-6 rounded-md bg-gradient-to-tr from-amber-400 via-yellow-200 to-amber-500 p-0.5 shadow-md border border-yellow-600/50 flex flex-col justify-around">
+                      <div className="h-[1.5px] w-full bg-amber-700/40" />
+                      <div className="h-[1.5px] w-full bg-amber-700/40" />
                     </div>
+                    <Wifi className="w-4 h-4 text-slate-300/80 rotate-90" />
                   </div>
 
-                  {/* Card Name & Masked Number */}
-                  <div className="mt-3">
-                    <div className="text-xs font-bold text-white tracking-wide truncate">
-                      {card.cardName}
-                    </div>
-                    <div className="text-[10px] text-slate-400 truncate">
-                      {card.holderName} • Due {card.dueDateDay}th
-                    </div>
-                    <div className="mt-2 text-xs font-mono tracking-widest text-slate-300">
-                      {maskCreditCardNumber(card.last4Digits, isPrivate)}
+                  <div className="flex items-center space-x-2">
+                    {card.isSharedLimit && (
+                      <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[9px] font-semibold flex items-center space-x-1">
+                        <LinkIcon className="w-2.5 h-2.5" />
+                        <span>linked</span>
+                      </span>
+                    )}
+
+                    {/* Mastercard / Payment Network Dual Circles */}
+                    <div className="flex -space-x-1.5 opacity-90">
+                      <div className="w-5 h-5 rounded-full bg-rose-500/90 shadow-sm" />
+                      <div className="w-5 h-5 rounded-full bg-amber-500/90 shadow-sm" />
                     </div>
                   </div>
                 </div>
 
-                {/* Balances & Utilization Bar */}
-                <div className="mt-4 pt-3 border-t border-white/10">
-                  <div className="flex items-center justify-between text-[11px]">
-                    <div>
-                      <span className="text-slate-400">Outstanding: </span>
-                      <span className="font-bold text-rose-400 font-mono">
-                        {formatINR(card.totalOutstanding, isPrivate)}
-                      </span>
+                {/* Middle Row: Card Name & Masked Card Number */}
+                <div className="relative z-10 my-auto py-1">
+                  <div className="flex items-center justify-between">
+                    <div className="text-xs sm:text-sm font-bold text-white tracking-wider uppercase truncate drop-shadow-sm max-w-[200px]">
+                      {card.cardName}
                     </div>
-                    <div>
-                      <span className="text-slate-400">Limit: </span>
-                      <span className="font-semibold text-slate-200 font-mono">
-                        {formatINR(card.creditLimit, isPrivate)}
-                      </span>
+                    <span className="text-[10px] text-slate-300/80 font-mono">
+                      DUE {card.dueDateDay}TH
+                    </span>
+                  </div>
+
+                  <div className="mt-2 text-xs sm:text-base font-mono tracking-[0.22em] text-white font-bold drop-shadow-md">
+                    {maskCreditCardNumber(card.last4Digits, isPrivate)}
+                  </div>
+                </div>
+
+                {/* Bottom Row: Holder Name & Utilization Bar */}
+                <div className="relative z-10 pt-2 border-t border-white/10 space-y-2">
+                  <div className="flex items-center justify-between text-[11px]">
+                    <div className="overflow-hidden">
+                      <div className="text-[9px] text-slate-400 uppercase tracking-wider">
+                        Card Holder
+                      </div>
+                      <div className="font-bold text-white uppercase tracking-wider truncate max-w-[140px]">
+                        {card.holderName || "Vault Master"}
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-[9px] text-slate-400 uppercase tracking-wider">
+                        Outstanding / Limit
+                      </div>
+                      <div className="font-mono text-xs font-bold text-white">
+                        <span className="text-rose-400">
+                          {formatINR(card.totalOutstanding, isPrivate)}
+                        </span>
+                        <span className="text-slate-400 mx-1">/</span>
+                        <span className="text-slate-300">
+                          {formatINR(card.creditLimit, isPrivate)}
+                        </span>
+                      </div>
                     </div>
                   </div>
 
                   {/* Utilization Progress Bar */}
-                  <div className="mt-2 flex items-center space-x-2">
-                    <div className="flex-1 h-1.5 rounded-full bg-slate-950/80 overflow-hidden border border-white/5">
+                  <div className="flex items-center space-x-2">
+                    <div className="flex-1 h-1.5 rounded-full bg-slate-950/80 overflow-hidden border border-white/10">
                       <div
                         style={{ width: `${utilization}%` }}
                         className={`h-full ${utilColor} rounded-full transition-all duration-500`}
                       />
                     </div>
-                    <span className="text-[10px] font-mono text-slate-400 min-w-[28px] text-right">
+                    <span className="text-[10px] font-mono text-slate-300 min-w-[28px] text-right font-semibold">
                       {utilization}%
                     </span>
                   </div>

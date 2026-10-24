@@ -175,9 +175,9 @@ export default function P2PLedgerTransactionModal({
                 onChange={(e) => setSourceType(e.target.value as any)}
                 className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/80 border border-white/10 text-white focus:outline-none focus:border-amber-400/50 transition text-sm"
               >
-                <option value="Physical Cash">Physical Cash</option>
-                <option value="Bank Account">Bank Account</option>
-                <option value="Gift Card">Gift Card</option>
+                <option value="Physical Cash">💵 Physical Record (Cash)</option>
+                <option value="Bank Account">🏦 Bank Account</option>
+                <option value="Gift Card">🧧 Gift Card</option>
               </select>
             </div>
           </div>

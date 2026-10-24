@@ -100,7 +100,7 @@ export default function QuickBankTxModal({ bankAccounts = [] }: { bankAccounts?:
           {currentAccount && (
             <div className="p-3 rounded-xl bg-slate-950/60 border border-white/10 flex items-center justify-between">
               <div>
-                <div className="text-xs text-slate-400">Target Bank Account</div>
+                <div className="text-xs text-slate-400">Target Bank Account 🏦</div>
                 <div className="text-sm font-semibold text-white">
                   {currentAccount.bankName}{" "}
                   <span className="text-xs text-slate-400 font-mono">

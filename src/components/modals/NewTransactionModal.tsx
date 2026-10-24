@@ -154,21 +154,21 @@ export default function NewTransactionModal({
                 className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/80 border border-white/10 text-white focus:outline-none focus:border-amber-400/50 transition text-sm"
                 required
               >
-                <optgroup label="Bank Accounts">
+                <optgroup label="🏦 Bank Accounts">
                   {bankAccounts.map((b) => (
                     <option key={b.id} value={`bank:${b.id}`}>
                       {b.bankName} (•••• {b.last4Digits})
                     </option>
                   ))}
                 </optgroup>
-                <optgroup label="Cash Wallets">
+                <optgroup label="💵 Physical Records">
                   {physicalAssets.map((c) => (
                     <option key={c.id} value={`cash:${c.id}`}>
                       {c.storageName}
                     </option>
                   ))}
                 </optgroup>
-                <optgroup label="Credit Cards">
+                <optgroup label="💳 Credit Cards">
                   {creditCards.map((c) => (
                     <option key={c.id} value={`card:${c.id}`}>
                       {c.cardName} (•••• {c.last4Digits})

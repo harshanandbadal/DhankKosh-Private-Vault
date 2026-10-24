@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useModal } from "@/context/ModalContext";
 import { createPhysicalAssetAction } from "@/actions/vault";
-import { X, Vault, Loader2 } from "lucide-react";
+import { X, Loader2 } from "lucide-react";
 
 const DENOMINATIONS = [500, 200, 100, 50, 20, 10] as const;
 
@@ -70,8 +70,8 @@ export default function CreatePhysicalAssetModal() {
         {/* Header */}
         <div className="flex items-center justify-between pb-4 border-b border-white/10">
           <div className="flex items-center space-x-2">
-            <Vault className="w-5 h-5 text-amber-400" />
-            <h2 className="text-xl font-semibold tracking-wide text-white">Add Physical Cash Record</h2>
+            <span className="text-xl leading-none">💵</span>
+            <h2 className="text-xl font-semibold tracking-wide text-white">Add Physical Record</h2>
           </div>
           <button
             onClick={closeModal}

@@ -222,7 +222,7 @@ export default function Navbar({ user }: { user?: any }) {
                   }}
                   className="w-full flex items-center space-x-3 px-4 py-2.5 text-xs hover:bg-amber-400/10 hover:text-amber-300 text-left transition"
                 >
-                  <Building2 className="w-4 h-4 text-blue-400" />
+                  <span className="text-base leading-none">🏦</span>
                   <span>Bank Account</span>
                 </button>
 
@@ -244,7 +244,7 @@ export default function Navbar({ user }: { user?: any }) {
                   }}
                   className="w-full flex items-center space-x-3 px-4 py-2.5 text-xs hover:bg-amber-400/10 hover:text-amber-300 text-left transition"
                 >
-                  <Vault className="w-4 h-4 text-emerald-400" />
+                  <span className="text-base leading-none">💵</span>
                   <span>Physical Record</span>
                 </button>
 
@@ -266,7 +266,7 @@ export default function Navbar({ user }: { user?: any }) {
                   }}
                   className="w-full flex items-center space-x-3 px-4 py-2.5 text-xs hover:bg-amber-400/10 hover:text-amber-300 text-left transition"
                 >
-                  <Gift className="w-4 h-4 text-pink-400" />
+                  <span className="text-base leading-none">🧧</span>
                   <span>Gift Card Record</span>
                 </button>
 

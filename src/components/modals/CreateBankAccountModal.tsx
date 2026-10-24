@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useModal } from "@/context/ModalContext";
 import { createBankAccountAction } from "@/actions/vault";
-import { X, Search, Building2, Loader2 } from "lucide-react";
+import { X, Search, Loader2 } from "lucide-react";
 
 const POPULAR_BANKS = [
   "HDFC Bank",
@@ -80,7 +80,7 @@ export default function CreateBankAccountModal() {
         {/* Header */}
         <div className="flex items-center justify-between pb-4 border-b border-white/10">
           <div className="flex items-center space-x-2">
-            <Building2 className="w-5 h-5 text-amber-400" />
+            <span className="text-xl leading-none">🏦</span>
             <h2 className="text-xl font-semibold tracking-wide text-white">Create Bank Account</h2>
           </div>
           <button

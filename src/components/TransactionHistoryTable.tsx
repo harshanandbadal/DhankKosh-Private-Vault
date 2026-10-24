@@ -13,9 +13,6 @@ import {
   ArrowDownLeft,
   ArrowUpRight,
   CreditCard,
-  Building2,
-  Vault,
-  Gift,
   Trash2,
   Loader2,
 } from "lucide-react";
@@ -288,7 +285,7 @@ export default function TransactionHistoryTable({
                     <td className="py-3 px-4 text-slate-400 whitespace-nowrap">
                       {tx.bankAccount ? (
                         <div className="flex items-center space-x-1.5">
-                          <Building2 className="w-3.5 h-3.5 text-blue-400 shrink-0" />
+                          <span className="text-sm leading-none shrink-0">🏦</span>
                           <span className="truncate">
                             {tx.bankAccount.bankName} (•••• {tx.bankAccount.last4Digits})
                           </span>
@@ -302,12 +299,12 @@ export default function TransactionHistoryTable({
                         </div>
                       ) : tx.physicalAsset ? (
                         <div className="flex items-center space-x-1.5">
-                          <Vault className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                          <span className="text-sm leading-none shrink-0">💵</span>
                           <span className="truncate">{tx.physicalAsset.storageName}</span>
                         </div>
                       ) : tx.giftCard ? (
                         <div className="flex items-center space-x-1.5">
-                          <Gift className="w-3.5 h-3.5 text-purple-400 shrink-0" />
+                          <span className="text-sm leading-none shrink-0">🧧</span>
                           <span className="truncate">{tx.giftCard.brandName}</span>
                         </div>
                       ) : (

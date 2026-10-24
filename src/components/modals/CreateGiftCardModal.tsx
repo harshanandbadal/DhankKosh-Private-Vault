@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useModal } from "@/context/ModalContext";
 import { createGiftCardAction } from "@/actions/vault";
-import { X, Gift, Loader2 } from "lucide-react";
+import { X, Loader2 } from "lucide-react";
 
 export default function CreateGiftCardModal({ bankAccounts = [] }: { bankAccounts?: any[] }) {
   const { activeModal, closeModal } = useModal();
@@ -66,7 +66,7 @@ export default function CreateGiftCardModal({ bankAccounts = [] }: { bankAccount
         {/* Header */}
         <div className="flex items-center justify-between pb-4 border-b border-white/10">
           <div className="flex items-center space-x-2">
-            <Gift className="w-5 h-5 text-amber-400" />
+            <span className="text-xl leading-none">🧧</span>
             <h2 className="text-xl font-semibold tracking-wide text-white">Add Gift Card Record</h2>
           </div>
           <button
