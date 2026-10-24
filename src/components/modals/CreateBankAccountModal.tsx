@@ -23,12 +23,12 @@ export default function CreateBankAccountModal() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const [bankName, setBankName] = useState("HDFC Bank");
-  const [holderName, setHolderName] = useState("Mr. Sharma");
+  const [bankName, setBankName] = useState("");
+  const [holderName, setHolderName] = useState("");
   const [accountType, setAccountType] = useState<"Savings" | "Current" | "Salary">("Savings");
   const [accountNumber, setAccountNumber] = useState("");
   const [last4Digits, setLast4Digits] = useState("");
-  const [initialBalance, setInitialBalance] = useState("50000");
+  const [initialBalance, setInitialBalance] = useState("");
   const [ifscCode, setIfscCode] = useState("");
   const [branch, setBranch] = useState("");
 
@@ -48,15 +48,22 @@ export default function CreateBankAccountModal() {
     setLoading(true);
     setError(null);
 
+    const trimmedAcc = accountNumber.trim();
+    if (!trimmedAcc || trimmedAcc.length < 4) {
+      setError("Please enter a valid account number (minimum 4 digits)");
+      setLoading(false);
+      return;
+    }
+
     const res = await createBankAccountAction({
-      bankName,
-      holderName,
+      bankName: bankName.trim(),
+      holderName: holderName.trim(),
       accountType,
-      accountNumber: accountNumber || "1234567890",
-      last4Digits: last4Digits || "7890",
+      accountNumber: trimmedAcc,
+      last4Digits: (last4Digits.trim() || trimmedAcc.slice(-4)).slice(-4),
       initialBalance: parseFloat(initialBalance) || 0,
-      ifscCode,
-      branch,
+      ifscCode: ifscCode.trim(),
+      branch: branch.trim(),
     });
 
     setLoading(false);

@@ -10,12 +10,12 @@ export default function CreateCreditCardModal({ existingCards = [] }: { existing
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const [cardName, setCardName] = useState("HDFC Regalia Gold");
-  const [holderName, setHolderName] = useState("Mr. Sharma");
-  const [last4Digits, setLast4Digits] = useState("8901");
-  const [creditLimit, setCreditLimit] = useState("500000");
-  const [availableBalance, setAvailableBalance] = useState("500000");
-  const [totalOutstanding, setTotalOutstanding] = useState("0");
+  const [cardName, setCardName] = useState("");
+  const [holderName, setHolderName] = useState("");
+  const [last4Digits, setLast4Digits] = useState("");
+  const [creditLimit, setCreditLimit] = useState("");
+  const [availableBalance, setAvailableBalance] = useState("");
+  const [totalOutstanding, setTotalOutstanding] = useState("");
   const [isSharedLimit, setIsSharedLimit] = useState(false);
   const [parentCardId, setParentCardId] = useState("");
   const [dueDateDay, setDueDateDay] = useState(15);
@@ -28,14 +28,21 @@ export default function CreateCreditCardModal({ existingCards = [] }: { existing
     setLoading(true);
     setError(null);
 
+    const trimmedLast4 = last4Digits.trim();
+    if (trimmedLast4.length !== 4) {
+      setError("Please enter the last 4 digits of the card");
+      setLoading(false);
+      return;
+    }
+
     const limitNum = parseFloat(creditLimit) || 0;
-    const availNum = parseFloat(availableBalance) || limitNum;
+    const availNum = availableBalance !== "" ? (parseFloat(availableBalance) || 0) : limitNum;
     const outNum = parseFloat(totalOutstanding) || 0;
 
     const res = await createCreditCardAction({
-      cardName,
-      holderName,
-      last4Digits: last4Digits || "0000",
+      cardName: cardName.trim(),
+      holderName: holderName.trim(),
+      last4Digits: trimmedLast4,
       creditLimit: limitNum,
       availableBalance: availNum,
       totalOutstanding: outNum,

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useModal } from "@/context/ModalContext";
 import { updateProfileAction, resetVaultDataAction, deleteAccountAction, seedSampleVaultAction } from "@/actions/settings";
 import { X, User, ShieldAlert, Sparkles, AlertTriangle, Loader2, LogOut } from "lucide-react";
@@ -14,11 +14,20 @@ export default function UserSettingsModal({ user }: { user?: any }) {
   const [salutation, setSalutation] = useState<"Mr." | "Mrs." | "Ms." | "Dr.">(
     (user?.salutation as any) || "Mr."
   );
-  const [name, setName] = useState(user?.name || "Mr. Sharma");
+  const [name, setName] = useState(user?.name || "");
   const [password, setPassword] = useState("");
 
   const [confirmReset, setConfirmReset] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
+
+  useEffect(() => {
+    if (user?.name) {
+      setName(user.name);
+    }
+    if (user?.salutation) {
+      setSalutation(user.salutation as any);
+    }
+  }, [user]);
 
   if (activeModal !== "SETTINGS") return null;
 

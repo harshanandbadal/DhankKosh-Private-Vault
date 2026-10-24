@@ -22,17 +22,20 @@ export default function P2PLedgerTransactionModal({
 
   const [p2pContactId, setP2pContactId] = useState(modalPayload?.contactId || "");
   const [mode, setMode] = useState<"PAY" | "RECEIVE">("RECEIVE");
-  const [amount, setAmount] = useState(modalPayload?.amount ? String(modalPayload.amount) : "15000");
+  const [amount, setAmount] = useState(modalPayload?.amount ? String(modalPayload.amount) : "");
   const [sourceType, setSourceType] = useState<"Physical Cash" | "Bank Account" | "Gift Card">("Physical Cash");
   const [sourceAccountId, setSourceAccountId] = useState("");
   const [date, setDate] = useState(() => new Date().toISOString().split("T")[0]);
-  const [remarks, setRemarks] = useState("Hand loan return");
+  const [remarks, setRemarks] = useState("");
 
   useEffect(() => {
     if (modalPayload?.contactId) {
       setP2pContactId(modalPayload.contactId);
     } else if (p2pContacts[0] && !p2pContactId) {
       setP2pContactId(p2pContacts[0].id);
+    }
+    if (modalPayload?.amount) {
+      setAmount(String(modalPayload.amount));
     }
   }, [modalPayload, p2pContacts, p2pContactId]);
 

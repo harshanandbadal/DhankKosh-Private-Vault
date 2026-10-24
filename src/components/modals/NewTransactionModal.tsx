@@ -27,7 +27,7 @@ export default function NewTransactionModal({
   );
   const [category, setCategory] = useState("Salary");
   const [date, setDate] = useState(() => new Date().toISOString().split("T")[0]);
-  const [description, setDescription] = useState("Paid to Rahul for trip");
+  const [description, setDescription] = useState("");
 
   if (activeModal !== "NEW_TRANSACTION") return null;
 

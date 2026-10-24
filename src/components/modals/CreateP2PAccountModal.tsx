@@ -10,15 +10,15 @@ export default function CreateP2PAccountModal() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const [name, setName] = useState("Rahul Verma");
-  const [phone, setPhone] = useState("+91 98765 43210");
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
   const [initialStatus, setInitialStatus] = useState<"They Owe Me (To Receive)" | "I Owe Them (To Pay)">(
     "They Owe Me (To Receive)"
   );
-  const [openingBalance, setOpeningBalance] = useState("15000");
+  const [openingBalance, setOpeningBalance] = useState("");
   const [email, setEmail] = useState("");
   const [group, setGroup] = useState("Friends");
-  const [relationshipRemarks, setRelationshipRemarks] = useState("Freelance Project");
+  const [relationshipRemarks, setRelationshipRemarks] = useState("");
 
   if (activeModal !== "CREATE_P2P") return null;
 
@@ -28,13 +28,13 @@ export default function CreateP2PAccountModal() {
     setError(null);
 
     const res = await createP2PContactAction({
-      name,
-      phone,
+      name: name.trim(),
+      phone: phone.trim(),
       initialStatus,
       openingBalance: parseFloat(openingBalance) || 0,
-      email,
+      email: email.trim(),
       group,
-      relationshipRemarks,
+      relationshipRemarks: relationshipRemarks.trim(),
     });
 
     setLoading(false);

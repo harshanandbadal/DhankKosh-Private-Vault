@@ -12,19 +12,19 @@ export default function CreatePhysicalAssetModal() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const [storageName, setStorageName] = useState("Home Safe");
-  const [holderName, setHolderName] = useState("Mr. Sharma");
-  const [currentBalance, setCurrentBalance] = useState("250000");
+  const [storageName, setStorageName] = useState("");
+  const [holderName, setHolderName] = useState("");
+  const [currentBalance, setCurrentBalance] = useState("");
   const [counts, setCounts] = useState<Record<number, number>>({
-    500: 400,
-    200: 200,
-    100: 100,
+    500: 0,
+    200: 0,
+    100: 0,
     50: 0,
     20: 0,
     10: 0,
   });
-  const [locationDetails, setLocationDetails] = useState("Primary residence, bedroom safe");
-  const [remarks, setRemarks] = useState("Emergency funds kept in cash");
+  const [locationDetails, setLocationDetails] = useState("");
+  const [remarks, setRemarks] = useState("");
 
   if (activeModal !== "CREATE_PHYSICAL") return null;
 
@@ -38,7 +38,7 @@ export default function CreatePhysicalAssetModal() {
     for (const d of DENOMINATIONS) {
       total += d * (newCounts[d] || 0);
     }
-    setCurrentBalance(String(total));
+    setCurrentBalance(total > 0 ? String(total) : "");
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -47,12 +47,12 @@ export default function CreatePhysicalAssetModal() {
     setError(null);
 
     const res = await createPhysicalAssetAction({
-      storageName,
-      holderName,
+      storageName: storageName.trim(),
+      holderName: holderName.trim(),
       currentBalance: parseFloat(currentBalance) || 0,
       denominations: counts,
-      locationDetails,
-      remarks,
+      locationDetails: locationDetails.trim(),
+      remarks: remarks.trim(),
       assetType: "CASH",
     });
 
@@ -148,8 +148,9 @@ export default function CreatePhysicalAssetModal() {
                   <input
                     type="number"
                     min={0}
-                    value={counts[d] || 0}
+                    value={counts[d] || ""}
                     onChange={(e) => handleDenominationChange(d, e.target.value)}
+                    placeholder="0"
                     className="w-full bg-slate-950 px-1.5 py-1 text-xs text-white text-center rounded border border-white/10 focus:outline-none focus:border-amber-400 font-mono"
                   />
                 </div>

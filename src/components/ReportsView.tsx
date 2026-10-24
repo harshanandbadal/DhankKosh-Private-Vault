@@ -24,12 +24,12 @@ export default function ReportsView({ initialTransactions = [] }: { initialTrans
   const [query, setQuery] = useState("");
   const [txType, setTxType] = useState("All");
   const [category, setCategory] = useState("All Categories");
-  const [startDate, setStartDate] = useState("2026-10-01");
-  const [endDate, setEndDate] = useState("2026-10-23");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
 
   const [totals, setTotals] = useState({
-    totalDebits: 12000,
-    totalCredits: 7500,
+    totalDebits: 0,
+    totalCredits: 0,
   });
 
   const CATEGORIES = [
@@ -81,7 +81,7 @@ export default function ReportsView({ initialTransactions = [] }: { initialTrans
     const divider = "----------------------------------------";
     const header = [
       "    DHANKOSH PRIVATE VAULT - STATEMENT",
-      `       FROM ${startDate} TO ${endDate}`,
+      `       FROM ${startDate || "ALL"} TO ${endDate || "PRESENT"}`,
       divider,
       "DATE        DESC             AMT(RS) TYPE",
     ];

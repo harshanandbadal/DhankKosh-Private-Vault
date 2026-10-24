@@ -10,15 +10,15 @@ export default function CreateGiftCardModal({ bankAccounts = [] }: { bankAccount
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const [brandName, setBrandName] = useState("Amazon Pay");
-  const [ownerName, setHolderName] = useState("Mr. Sharma");
-  const [cardNumber, setCardNumber] = useState("9876-5432-1098-7654");
-  const [last4Digits, setLast4Digits] = useState("7654");
-  const [initialBalance, setInitialBalance] = useState("10000");
-  const [expiryDate, setExpiryDate] = useState("2027-12-31");
+  const [brandName, setBrandName] = useState("");
+  const [ownerName, setHolderName] = useState("");
+  const [cardNumber, setCardNumber] = useState("");
+  const [last4Digits, setLast4Digits] = useState("");
+  const [initialBalance, setInitialBalance] = useState("");
+  const [expiryDate, setExpiryDate] = useState("");
   const [linkedAccountId, setLinkedAccountId] = useState("");
   const [purchaseMethod, setPurchaseMethod] = useState("Credit Card");
-  const [remarks, setRemarks] = useState("Birthday gift from sibling");
+  const [remarks, setRemarks] = useState("");
 
   if (activeModal !== "CREATE_GIFT") return null;
 
@@ -37,16 +37,19 @@ export default function CreateGiftCardModal({ bankAccounts = [] }: { bankAccount
     setLoading(true);
     setError(null);
 
+    const trimmedCard = cardNumber.trim();
+    const derivedLast4 = last4Digits.trim() || (trimmedCard ? trimmedCard.replace(/\D/g, "").slice(-4) : "");
+
     const res = await createGiftCardAction({
-      brandName,
-      ownerName,
-      cardNumber,
-      last4Digits: last4Digits || "0000",
+      brandName: brandName.trim(),
+      ownerName: ownerName.trim(),
+      cardNumber: trimmedCard,
+      last4Digits: derivedLast4 || "0000",
       initialBalance: parseFloat(initialBalance) || 0,
-      expiryDate,
+      expiryDate: expiryDate || undefined,
       linkedAccountId,
       purchaseMethod,
-      remarks,
+      remarks: remarks.trim(),
     });
 
     setLoading(false);

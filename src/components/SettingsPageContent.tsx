@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { updateProfileAction, resetVaultDataAction, deleteAccountAction, seedSampleVaultAction } from "@/actions/settings";
 import { User, ShieldAlert, Sparkles, Loader2, KeyRound, LogOut } from "lucide-react";
 import { signOut } from "next-auth/react";
@@ -12,11 +12,20 @@ export default function SettingsPageContent({ user }: { user?: any }) {
   const [salutation, setSalutation] = useState<"Mr." | "Mrs." | "Ms." | "Dr.">(
     (user?.salutation as any) || "Mr."
   );
-  const [name, setName] = useState(user?.name || "Mr. Sharma");
+  const [name, setName] = useState(user?.name || "");
   const [password, setPassword] = useState("");
 
   const [confirmReset, setConfirmReset] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
+
+  useEffect(() => {
+    if (user?.name) {
+      setName(user.name);
+    }
+    if (user?.salutation) {
+      setSalutation(user.salutation as any);
+    }
+  }, [user]);
 
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault();

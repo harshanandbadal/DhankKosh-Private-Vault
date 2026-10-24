@@ -268,7 +268,7 @@ export async function createPhysicalAssetAction(formData: {
         data: {
           userId,
           storageName: formData.storageName,
-          holderName: formData.holderName || "Mr. Sharma",
+          holderName: formData.holderName || "Vault Owner",
           currentBalance: formData.currentBalance,
           denominations: denomsStr,
           locationDetails: formData.locationDetails || "",
@@ -387,7 +387,7 @@ export async function createGiftCardAction(formData: {
       data: {
         userId,
         brandName: formData.brandName,
-        ownerName: formData.ownerName || "Mr. Sharma",
+        ownerName: formData.ownerName || "Vault Owner",
         cardNumber: formData.cardNumber,
         last4Digits: last4,
         initialBalance: formData.initialBalance,
