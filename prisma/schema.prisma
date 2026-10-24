@@ -1,0 +1,202 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                  String               @id @default(cuid())
+  email               String               @unique
+  passwordHash        String?              @map("password")
+  name                String               @default("")
+  salutation          String               @default("Mr.") @map("title")
+  provider            String               @default("credentials")
+  providerId          String?
+  image               String?
+  hideAmounts         Boolean              @default(false)
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+
+  bankAccounts        BankAccount[]
+  creditCards         CreditCard[]
+  giftCards           GiftCard[]
+  netWorthSnapshots   NetWorthSnapshot[]
+  p2pContacts         P2PContact[]
+  physicalAssets      PhysicalAsset[]
+  transactions        Transaction[]
+
+  @@map("users")
+}
+
+model BankAccount {
+  id             String         @id @default(cuid())
+  userId         String
+  bankName       String
+  holderName     String         @map("accountHolder")
+  accountType    String         @default("Savings")
+  accountNumber  String         @default("")
+  last4Digits    String         @default("") @map("lastFourDigits")
+  balance        Float          @default(0)
+  ifscCode       String?        @default("")
+  branch         String?        @default("")
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions   Transaction[]
+
+  @@map("bank_accounts")
+}
+
+model CreditCard {
+  id                 String         @id @default(cuid())
+  userId             String
+  cardName           String
+  holderName         String         @map("cardHolderName")
+  last4Digits        String         @default("") @map("lastFourDigits")
+  creditLimit        Float          @default(0)
+  availableBalance   Float          @default(0)
+  totalOutstanding   Float          @default(0)
+  dueDateDay         Int            @default(15) @map("paymentDueDate")
+  parentCardId       String?        @map("linkedCardId")
+  isSharedLimit      Boolean        @default(false) @map("isLinked")
+  theme              String         @default("blue") @map("cardColor")
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+
+  parentCard         CreditCard?    @relation("CardSupplementary", fields: [parentCardId], references: [id])
+  supplementaryCards CreditCard[]   @relation("CardSupplementary")
+  user               User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions       Transaction[]
+
+  @@map("credit_cards")
+}
+
+model GiftCard {
+  id              String         @id @default(cuid())
+  userId          String
+  brandName       String
+  ownerName       String         @default("")
+  cardNumber      String         @default("")
+  last4Digits     String         @default("") @map("lastFourDigits")
+  initialBalance  Float          @default(0)
+  balance         Float          @default(0) @map("currentBalance")
+  expiryDate      DateTime?
+  linkedAccountId String?        @default("") @map("linkedAccount")
+  purchaseMethod  String?        @default("")
+  remarks         String?        @default("")
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  user            User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions    Transaction[]
+
+  @@map("gift_cards")
+}
+
+model NetWorthSnapshot {
+  id          String   @id @default(cuid())
+  userId      String
+  netWorth    Float
+  grossAssets Float
+  liabilities Float
+  bankTotal   Float    @default(0)
+  creditTotal Float    @default(0)
+  cashTotal   Float    @default(0)
+  p2pTotal    Float    @default(0)
+  giftTotal   Float    @default(0)
+  date        DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("net_worth_snapshots")
+}
+
+model P2PContact {
+  id                  String             @id @default(cuid())
+  userId              String
+  name                String             @map("personName")
+  phone               String             @default("") @map("phoneNumber")
+  email               String?            @default("")
+  initialStatus       String             @default("none")
+  openingBalance      Float              @default(0)
+  netBalance          Float              @default(0) @map("currentBalance")
+  group               String             @default("Friends")
+  relationshipRemarks String?            @default("") @map("relationship")
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+
+  user                User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  p2pTransactions     P2PTransaction[]
+
+  @@map("p2p_accounts")
+}
+
+model P2PTransaction {
+  id           String       @id @default(cuid())
+  p2pAccountId String
+  type         String
+  amount       Float
+  destination  String       @default("")
+  date         DateTime     @default(now())
+  remarks      String       @default("")
+  createdAt    DateTime     @default(now())
+
+  p2pContact   P2PContact   @relation(fields: [p2pAccountId], references: [id], onDelete: Cascade)
+
+  @@map("p2p_transactions")
+}
+
+model PhysicalAsset {
+  id              String         @id @default(cuid())
+  userId          String
+  storageName     String
+  holderName      String         @default("") @map("holders")
+  currentBalance  Float          @default(0)
+  denominations   String?        @default("")
+  locationDetails String?        @default("") @map("location")
+  remarks         String?        @default("") @map("description")
+  assetType       String         @default("CASH")
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  user            User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions    Transaction[]
+
+  @@map("physical_assets")
+}
+
+model Transaction {
+  id              String           @id @default(cuid())
+  userId          String
+  type            String
+  amount          Float
+  category        String           @default("General")
+  description     String           @default("")
+  date            DateTime         @default(now())
+  bankAccountId   String?
+  creditCardId    String?
+  physicalAssetId String?
+  giftCardId      String?
+  createdAt       DateTime         @default(now())
+
+  bankAccount     BankAccount?     @relation(fields: [bankAccountId], references: [id], onDelete: SetNull)
+  creditCard      CreditCard?      @relation(fields: [creditCardId], references: [id], onDelete: SetNull)
+  giftCard        GiftCard?        @relation(fields: [giftCardId], references: [id], onDelete: SetNull)
+  physicalAsset   PhysicalAsset?   @relation(fields: [physicalAssetId], references: [id], onDelete: SetNull)
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("transactions")
+}
+
+model PlayingWithNeon {
+  id    Int    @id @default(autoincrement())
+  name  String
+  value Float? @db.Real
+
+  @@map("playing_with_neon")
+}
+
